@@ -18,7 +18,7 @@
   "license": "BSD",
   "dependencies": {
     "through": "~2.3.4",
-    "falafel": "https://github.com/Financial-Times/node-falafel/archive/shrinkwrap-fix.tar.gz",
+    "falafel": "git+https://github.com/Financial-Times/node-falafel.git",
     "bower": "~1.2.6"
   },
   "devDependencies": {
