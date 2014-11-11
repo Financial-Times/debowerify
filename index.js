@@ -1,12 +1,13 @@
 var bower = require('bower');
-var bowerModules;
 
 var path = require('path');
 var through = require('through');
 var falafel = require('falafel');
 
 module.exports = function (file) {
-  if (!/\.(js|jsx|coffee|ls)$/.test(file)) return through();
+  var bowerModules;
+  
+  if (!/\.(js|c?jsx|(lit)?coffee(\.md)?|ls|ts)$/.test(file)) return through();
   var data = '';
 
   var tr = through(write, end);
@@ -79,6 +80,11 @@ module.exports = function (file) {
         var module = getModule(moduleName);
         if (!module) return;
 
+        if (module.missing) {
+          throw new Error('could not resolve dependency ' + moduleName + 
+            ' : bower returns the module as known but not found (did you forget to run bower install ?)');
+	}
+	      
         var pkgMeta = module.pkgMeta;
         var requiredFilePath = moduleSubPath;
 
@@ -91,6 +97,7 @@ module.exports = function (file) {
             requiredFilePath = moduleName + '.js';
           }
         }
+
 
         var fullModulePath = path.resolve(path.join(module.canonicalDir, requiredFilePath));
         var relativeRequiredFilePath = './' + path.relative(path.dirname(file), fullModulePath);
